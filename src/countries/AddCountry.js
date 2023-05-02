@@ -6,10 +6,10 @@ export default function AddCountry() {
   let navigate = useNavigate();
 
   const [country, setCountry] = useState({
-    name: "",
-    capital: "",
-    area: "",
-    population: "",
+    name_country: "",
+    capital_country: "",
+    area_country: "",
+    population_country: "",
   });
 
   const { name, capital, area, population } = country;
@@ -31,61 +31,64 @@ export default function AddCountry() {
           <h2 className="text-center m-4">Adding Country</h2>
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
-              <label htmlFor="country" className="form-label">
+              <label htmlFor="name_country" className="form-label">
                 Название страны
               </label>
               <input
                 type={"text"}
                 className="form-control"
                 placeholder="Введите название страны"
-                name="name"
-                value={name}
+                name="name_country"
+                value={name_country}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
+
             <div className="mb-3">
-              <label htmlFor="capital" className="form-label">
+              <label htmlFor="capital_country" className="form-label">
                 Столица
               </label>
               <input
                 type={"text"}
                 className="form-control"
                 placeholder="Введите столицу"
-                name="capital"
-                value={capital}
+                name="capital_country"
+                value={capital_country}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
+
             <div className="mb-3">
-              <label htmlFor="area" className="form-label">
+              <label htmlFor="area_country" className="form-label">
                 Площадь
               </label>
               <input
                 type={"text"}
                 className="form-control"
                 placeholder="Введите площадь"
-                name="area"
-                value={area}
+                name="area_country"
+                value={area_country}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
+
             <div className="mb-3">
-              <label htmlFor="population" className="form-label">
+              <label htmlFor="population_country" className="form-label">
                 Население
               </label>
               <input
                 type={"text"}
                 className="form-control"
                 placeholder="Введите население"
-                name="population"
-                value={population}
+                name="population_country"
+                value={population_country}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Подтвердить
             </button>
-            <Link className="btn btn-outline-danger mx-2" to="/">
+            <Link className="btn btn-outline-danger mx-2" to="/country">
               Отменить
             </Link>
           </form>
