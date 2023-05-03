@@ -10,7 +10,7 @@ export default function Navbar() {
             Full Stack Application
           </Link>
 
-          <div class="collapse navbar-collapse" id="navbarNav">
+          <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav right">
               <li className="nav-item">
                 <Link className="nav-link" to={`/country`}>
@@ -23,7 +23,7 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={`/country`}>
+                <Link className="nav-link" to={`/river`}>
                   Реки
                 </Link>
               </li>
@@ -38,9 +38,6 @@ export default function Navbar() {
                 </Link>
               </li>
             </ul>
-            <Link className="btn btn-outline-light" to="/addcountry">
-              Add Country
-            </Link>
           </div>
         </div>
       </nav>

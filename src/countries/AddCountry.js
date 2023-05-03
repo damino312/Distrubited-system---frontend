@@ -12,7 +12,8 @@ export default function AddCountry() {
     population_country: "",
   });
 
-  const { name, capital, area, population } = country;
+  const { name_country, capital_country, area_country, population_country } =
+    country;
 
   const onInputChange = (e) => {
     setCountry({ ...country, [e.target.name]: e.target.value });
@@ -21,7 +22,7 @@ export default function AddCountry() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios.post("http://localhost:8080/country", country);
-    navigate("/");
+    navigate("/country");
   };
 
   return (
