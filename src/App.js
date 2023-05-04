@@ -7,6 +7,7 @@ import EditCountry from "./countries/EditCountry";
 import Country from "./pages/Country";
 import River from "./pages/River";
 import AddRiver from "./rivers/AddRiver";
+import EditRiver from "./rivers/EditRiver";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
           <Route exact path="/river" element={<River />}></Route>
           <Route exact path="/addcountry" element={<AddCountry />}></Route>
           <Route exact path="/addriver" element={<AddRiver />}></Route>
-
+          <Route exact path="/editriver/:id" element={<EditRiver />}></Route>
           <Route
             exact
             path="/editcountry/:id"

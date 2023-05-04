@@ -34,10 +34,8 @@ export default function Home() {
         </thead>
         <tbody>
           {countries.map((country, index) => (
-            <tr>
-              <th scope="row" key={index}>
-                {index + 1}
-              </th>
+            <tr key={index}>
+              <th scope="row">{index + 1}</th>
               <td>{country.name_country}</td>
               <td>{country.capital_country}</td>
               <td>{country.area_country}</td>

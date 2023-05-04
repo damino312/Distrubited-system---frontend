@@ -1,20 +1,33 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ListCountries(props) {
   const [countries, setCountries] = useState([]);
 
+  useEffect(() => {
+    enableCheck();
+  }, []);
+
+  // it is supposed to pass "true" into specific "checked"s but it doesn't work
+  function enableCheck() {
+    const recordData = props.checks;
+    const checkboxes = document.querySelectorAll("#id_country");
+
+    console.log(checkboxes);
+  }
+
+  // the work of the checkboxes
   function handleChange(e) {
     const countryData = e.target.dataset.country;
     const country = JSON.parse(countryData);
     const isChecked = e.target.checked;
     if (isChecked) {
       setCountries([...countries, country]);
-      props.choosemessage([...countries, country]);
+      props.passCheckedCountries([...countries, country]);
     } else {
       setCountries(
         countries.filter((c) => c.id_country !== country.id_country)
       );
-      props.choosemessage(
+      props.passCheckedCountries(
         countries.filter((c) => c.id_country !== country.id_country)
       );
     }

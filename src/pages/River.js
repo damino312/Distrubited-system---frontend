@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     loadRivers();
-  });
+  }, []);
 
   const loadRivers = async () => {
     const result = await axios.get("http://localhost:8080/rivers");
@@ -33,14 +33,14 @@ export default function Home() {
         </thead>
         <tbody>
           {rivers.map((river, index) => (
-            <tr>
-              <th scope="row" key={index}>
-                {index + 1}
-              </th>
+            <tr key={index}>
+              <th scope="row">{index + 1}</th>
               <td>{river.name_river}</td>
               <td>{river.length_river}</td>
               <td>
-                {river.countries.map((country) => country.name_country + " ")}
+                {river.countries_river.map(
+                  (country) => country.name_country + " "
+                )}
               </td>
 
               <td>
