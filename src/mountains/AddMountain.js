@@ -3,10 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ListCountries from "../components/ListCountries";
 
-export default function AddRiver() {
+export default function AddMountain() {
   let navigate = useNavigate();
-
-  
 
   const [checkedCountries, setCheckedCountries] = useState("");
   function passCheckedCountries(msg) {
@@ -15,12 +13,12 @@ export default function AddRiver() {
 
   const [countries, setCountries] = useState([]);
 
-  const [river, setRiver] = useState({
-    name_river: "",
-    length_river: "",
-    countries_river: [],
+  const [mountain, setMountain] = useState({
+    name_mountain: "",
+    height_mountain: "",
+    countries_mountain: [],
   });
-  const { name_river, length_river, countries_river } = river;
+  const { name_mountain, height_mountain, countries_mountain } = mountain;
 
   useEffect(() => {
     loadCountries();
@@ -32,50 +30,49 @@ export default function AddRiver() {
   };
 
   const onInputChange = (e) => {
-    setRiver({ ...river, [e.target.name]: e.target.value });
+    setMountain({ ...mountain, [e.target.name]: e.target.value });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const updatedRiver = {
-      ...river,
-      countries_river: checkedCountries, // обновленное значение countries_river
+    const updatedMountain = {
+      ...mountain,
+      countries_mountain: checkedCountries, // обновленное значение countries_mountain, все что выбрано чекбоксом идем в countries_mountain
     };
-    console.log(updatedRiver);
-    await axios.post("http://localhost:8080/river", updatedRiver);
-    navigate("/river");
+    console.log(updatedMountain);
+    await axios.post("http://localhost:8080/mountain", updatedMountain);
+    navigate("/mountain");
   };
 
   return (
     <div className="container">
-      {console.log("1")}
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
-          <h2 className="text-center m-4">Добавить реку</h2>
+          <h2 className="text-center m-4">Добавить Гору</h2>
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
-              <label htmlFor="name_river" className="form-label">
-                Название реки
+              <label htmlFor="name_mountain" className="form-label">
+                Название горы
               </label>
               <input
                 type={"text"}
                 className="form-control"
-                placeholder="Введите название реки"
-                name="name_river"
-                value={name_river}
+                placeholder="Введите название горы"
+                name="name_mountain"
+                value={name_mountain}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
             <div className="mb-3">
-              <label htmlFor="length_river" className="form-label">
-                Длина реки
+              <label htmlFor="height_mountain" className="form-label">
+                Высота горы
               </label>
               <input
-                type={"text"}
+                type={"number"}
                 className="form-control"
-                placeholder="Введите длину"
-                name="length_river"
-                value={length_river}
+                placeholder="Введите высоту"
+                name="height_mountain"
+                value={height_mountain}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
@@ -92,7 +89,7 @@ export default function AddRiver() {
             <button type="submit" className="btn btn-outline-primary">
               Подтвердить
             </button>
-            <Link className="btn btn-outline-danger mx-2" to="/river">
+            <Link className="btn btn-outline-danger mx-2" to="/mountain">
               Отменить
             </Link>
           </form>

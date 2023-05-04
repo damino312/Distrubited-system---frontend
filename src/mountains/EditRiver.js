@@ -1,39 +1,43 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ListCountries from "../components/ListCountries";
 
-export default function AddRiver() {
+export default function EditRiver() {
   let navigate = useNavigate();
 
-  
-
-  const [checkedCountries, setCheckedCountries] = useState("");
-  function passCheckedCountries(msg) {
-    setCheckedCountries(msg);
-  }
-
-  const [countries, setCountries] = useState([]);
+  const { id } = useParams();
 
   const [river, setRiver] = useState({
     name_river: "",
     length_river: "",
     countries_river: [],
   });
-  const { name_river, length_river, countries_river } = river;
 
-  useEffect(() => {
-    loadCountries();
-  });
-
+  const [countries, setCountries] = useState([]);
   const loadCountries = async () => {
     const result = await axios.get("http://localhost:8080/counties");
     setCountries(result.data);
   };
 
+  const [checkedCountries, setCheckedCountries] = useState("");
+  function passCheckedCountries(msg) {
+    setCheckedCountries(msg);
+  }
+
+  const { name_river, length_river, countries_river } = river;
+
   const onInputChange = (e) => {
     setRiver({ ...river, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    loadRiver(id);
+  }, [id]);
+
+  useEffect(() => {
+    loadCountries();
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -41,14 +45,18 @@ export default function AddRiver() {
       ...river,
       countries_river: checkedCountries, // обновленное значение countries_river
     };
-    console.log(updatedRiver);
-    await axios.post("http://localhost:8080/river", updatedRiver);
+    await axios.put(`http://localhost:8080/river/${id}`, updatedRiver);
     navigate("/river");
+    console.log(river);
+  };
+
+  const loadRiver = async () => {
+    const result = await axios.get(`http://localhost:8080/river/${id}`);
+    setRiver(result.data);
   };
 
   return (
     <div className="container">
-      {console.log("1")}
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
           <h2 className="text-center m-4">Добавить реку</h2>
@@ -87,6 +95,7 @@ export default function AddRiver() {
               <ListCountries
                 countries={countries}
                 passCheckedCountries={passCheckedCountries}
+                checks={river}
               />
             </div>
             <button type="submit" className="btn btn-outline-primary">

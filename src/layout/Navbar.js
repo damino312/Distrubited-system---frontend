@@ -28,7 +28,7 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={`/country`}>
+                <Link className="nav-link" to={`/mountain`}>
                   Горы
                 </Link>
               </li>
