@@ -1,18 +1,34 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ListCountries from "../components/ListCountries";
 
 export default function AddRiver() {
   let navigate = useNavigate();
 
+  const [message, setMessage] = useState("");
+
+  function choosemessage(msg) {
+    setMessage(msg);
+  }
+
+  const [countries, setCountries] = useState([]);
+
   const [river, setRiver] = useState({
     name_river: "",
     length_river: "",
-    countries: "",
+    countries_river: [],
+  });
+  const { name_river, length_river, countries_river } = river;
+
+  useEffect(() => {
+    loadCountries();
   });
 
-  const { name_river, length_river, countries } = river;
+  const loadCountries = async () => {
+    const result = await axios.get("http://localhost:8080/counties");
+    setCountries(result.data);
+  };
 
   const onInputChange = (e) => {
     setRiver({ ...river, [e.target.name]: e.target.value });
@@ -20,9 +36,13 @@ export default function AddRiver() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(river);
-    await axios.post("http://localhost:8080/river", river);
-    navigate("/river");
+    const updatedRiver = {
+      ...river,
+      countries_river: message, // обновленное значение countries_river
+    };
+    console.log(updatedRiver);
+    await axios.post("http://localhost:8080/river", updatedRiver);
+    // navigate("/river");
   };
 
   return (
@@ -61,7 +81,11 @@ export default function AddRiver() {
               <label htmlFor="countries" className="form-label">
                 Страны
               </label>
-              <ListCountries />
+
+              <ListCountries
+                countries={countries}
+                choosemessage={choosemessage}
+              />
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Подтвердить

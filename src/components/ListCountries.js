@@ -1,7 +1,24 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useContext } from "react";
 
-export default function ListCountries() {
+export default function ListCountries(props) {
+  const [countries, setCountries] = useState([]);
+
+  function handleChange(e) {
+    const countryData = e.target.dataset.country;
+    const country = JSON.parse(countryData);
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setCountries([...countries, country]);
+      props.choosemessage([...countries, country]);
+    } else {
+      setCountries(
+        countries.filter((c) => c.id_country !== country.id_country)
+      );
+      props.choosemessage(
+        countries.filter((c) => c.id_country !== country.id_country)
+      );
+    }
+  }
   return (
     <div className="accordion" id="accordionExample">
       <div className="accordion-item">
@@ -23,16 +40,21 @@ export default function ListCountries() {
           data-bs-parent="#accordionExample"
         >
           <div className="accordion-body">
-            {countries.map((country) => (
-              <div className="form-check">
+            {props.countries.map((country) => (
+              <div className="form-check" key={country.id_country}>
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  value={country}
-                  id="flexCheckDefault"
+                  value={country.id_country}
+                  onChange={handleChange}
+                  id="id_country"
+                  data-country={JSON.stringify(country)}
                 ></input>
 
-                <label className="form-check-label" htmlFor="flexCheckDefault">
+                <label
+                  className="form-check-label"
+                  htmlFor={country.id_country}
+                >
                   {country.name_country}
                 </label>
               </div>
