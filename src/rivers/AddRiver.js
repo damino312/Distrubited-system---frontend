@@ -6,12 +6,7 @@ import ListCountries from "../components/ListCountries";
 export default function AddRiver() {
   let navigate = useNavigate();
 
-  
-
   const [checkedCountries, setCheckedCountries] = useState("");
-  function passCheckedCountries(msg) {
-    setCheckedCountries(msg);
-  }
 
   const [countries, setCountries] = useState([]);
 
@@ -24,7 +19,12 @@ export default function AddRiver() {
 
   useEffect(() => {
     loadCountries();
-  });
+  }, []);
+
+  function passCheckedCountries(msg) {
+    // для передачи выбранных чекбоксом стран из дочернего элемента
+    setCheckedCountries(msg);
+  }
 
   const loadCountries = async () => {
     const result = await axios.get("http://localhost:8080/counties");
@@ -39,7 +39,7 @@ export default function AddRiver() {
     e.preventDefault();
     const updatedRiver = {
       ...river,
-      countries_river: checkedCountries, // обновленное значение countries_river
+      countries_river: checkedCountries, // обновленное значение countries_river с данными из дочернего элемента, выбранными чекбоксами
     };
     console.log(updatedRiver);
     await axios.post("http://localhost:8080/river", updatedRiver);
@@ -48,7 +48,6 @@ export default function AddRiver() {
 
   return (
     <div className="container">
-      {console.log("1")}
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
           <h2 className="text-center m-4">Добавить реку</h2>
@@ -71,10 +70,11 @@ export default function AddRiver() {
                 Длина реки
               </label>
               <input
-                type={"text"}
+                type={"number"}
                 className="form-control"
                 placeholder="Введите длину"
                 name="length_river"
+                maxLength="8"
                 value={length_river}
                 onChange={(e) => onInputChange(e)}
               ></input>
@@ -83,11 +83,12 @@ export default function AddRiver() {
               <label htmlFor="countries" className="form-label">
                 Страны
               </label>
-
-              <ListCountries
-                countries={countries}
-                passCheckedCountries={passCheckedCountries}
-              />
+              {countries.length && ( // чтобы ListCountries рендерилась один раз
+                <ListCountries
+                  countries={countries}
+                  passCheckedCountries={passCheckedCountries}
+                />
+              )}
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Подтвердить

@@ -15,21 +15,8 @@ export default function EditRiver() {
   });
 
   const [countries, setCountries] = useState([]);
-  const loadCountries = async () => {
-    const result = await axios.get("http://localhost:8080/counties");
-    setCountries(result.data);
-  };
-
-  const [checkedCountries, setCheckedCountries] = useState("");
-  function passCheckedCountries(msg) {
-    setCheckedCountries(msg);
-  }
 
   const { name_river, length_river } = river;
-
-  const onInputChange = (e) => {
-    setRiver({ ...river, [e.target.name]: e.target.value });
-  };
 
   useEffect(() => {
     loadRiver(id);
@@ -39,11 +26,25 @@ export default function EditRiver() {
     loadCountries();
   }, []);
 
+  const loadCountries = async () => {
+    const result = await axios.get("http://localhost:8080/counties");
+    setCountries(result.data);
+  };
+
+  const [checkedCountries, setCheckedCountries] = useState(""); // для передачи выбранных чекбоксом стран из дочернего элемента
+  function passCheckedCountries(msg) {
+    setCheckedCountries(msg);
+  }
+
+  const onInputChange = (e) => {
+    setRiver({ ...river, [e.target.name]: e.target.value });
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const updatedRiver = {
       ...river,
-      countries_river: checkedCountries, // обновленное значение countries_river
+      countries_river: checkedCountries, // обновленное значение countries_river с данными из дочернего элемента, выбранными чекбоксами
     };
     await axios.put(`http://localhost:8080/river/${id}`, updatedRiver);
     navigate("/river");
@@ -79,7 +80,8 @@ export default function EditRiver() {
                 Длина реки
               </label>
               <input
-                type={"text"}
+                type={"number"}
+                maxLength="8"
                 className="form-control"
                 placeholder="Введите длину"
                 name="length_river"
