@@ -25,7 +25,7 @@ export default function EditRiver() {
     setCheckedCountries(msg);
   }
 
-  const { name_river, length_river, countries_river } = river;
+  const { name_river, length_river } = river;
 
   const onInputChange = (e) => {
     setRiver({ ...river, [e.target.name]: e.target.value });
@@ -33,7 +33,7 @@ export default function EditRiver() {
 
   useEffect(() => {
     loadRiver(id);
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     loadCountries();
@@ -91,12 +91,13 @@ export default function EditRiver() {
               <label htmlFor="countries" className="form-label">
                 Страны
               </label>
-
-              <ListCountries
-                countries={countries}
-                passCheckedCountries={passCheckedCountries}
-                checks={river}
-              />
+              {countries.length && ( // чтобы ListCountries рендерилась один раз
+                <ListCountries
+                  countries={countries}
+                  passCheckedCountries={passCheckedCountries}
+                  checks={river.countries_river.map((elem) => elem.id_country)} // чтобы выставить чекбоксы при редактировании автоматически
+                />
+              )}
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Подтвердить

@@ -7,16 +7,26 @@ export default function ListCountries(props) {
     enableCheck();
   }, []);
 
-  // it is supposed to pass "true" into specific "checked"s but it doesn't work
   function enableCheck() {
-    const recordData = props.checks;
-    const checkboxes = document.querySelectorAll("#id_country");
-
-    console.log(checkboxes);
+    let obj = [];
+    // включает чекбоксы при редактировании записи
+    if (!props.checks) return null;
+    const idList = props.checks;
+    const checkboxes = Array.from(document.querySelectorAll("#id_country"));
+    checkboxes.forEach((element) => {
+      //если id чекбокса совпадает с id стран выбранного элемента, то данные этих чекбоксов передаюся по дефолту на форму редактирования
+      if (idList.includes(parseInt(element.value))) {
+        element.checked = true;
+        const country = JSON.parse(element.dataset.country);
+        obj.push(country);
+      }
+    });
+    setCountries(obj);
+    props.passCheckedCountries(obj);
   }
 
-  // the work of the checkboxes
   function handleChange(e) {
+    // работа нажатия чекбоксов - передает на родительскую форму редактирования данные о выбранных чекбоксах
     const countryData = e.target.dataset.country;
     const country = JSON.parse(countryData);
     const isChecked = e.target.checked;
@@ -63,7 +73,6 @@ export default function ListCountries(props) {
                   id="id_country"
                   data-country={JSON.stringify(country)}
                 ></input>
-
                 <label
                   className="form-check-label"
                   htmlFor={country.id_country}
