@@ -86,7 +86,10 @@ export default function EditRiver() {
                 placeholder="Введите длину"
                 name="length_river"
                 value={length_river}
-                onChange={(e) => onInputChange(e)}
+                onChange={(e) => {
+                  e.target.value = e.target.value.slice(0, 7);
+                  onInputChange(e);
+                }}
               ></input>
             </div>
             <div className="mb-3">

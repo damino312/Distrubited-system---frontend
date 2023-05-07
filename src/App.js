@@ -10,6 +10,9 @@ import Mountain from "./pages/Mountain";
 import AddRiver from "./rivers/AddRiver";
 import EditRiver from "./rivers/EditRiver";
 import AddMountain from "./mountains/AddMountain";
+import EditMountain from "./mountains/EditMountain";
+import Lake from "./pages/Lake";
+import AddLake from "./lakes/AddLake";
 
 function App() {
   return (
@@ -21,12 +24,19 @@ function App() {
           <Route exact path="/country" element={<Country />}></Route>
           <Route exact path="/river" element={<River />}></Route>
           <Route exact path="/mountain" element={<Mountain />}></Route>
+          <Route exact path="/lake" element={<Lake />}></Route>
 
           <Route exact path="/addcountry" element={<AddCountry />}></Route>
           <Route exact path="/addmountain" element={<AddMountain />}></Route>
           <Route exact path="/addriver" element={<AddRiver />}></Route>
+          <Route exact path="/addlake" element={<AddLake />}></Route>
 
           <Route exact path="/editriver/:id" element={<EditRiver />}></Route>
+          <Route
+            exact
+            path="/editmountain/:id"
+            element={<EditMountain />}
+          ></Route>
           <Route
             exact
             path="/editcountry/:id"
