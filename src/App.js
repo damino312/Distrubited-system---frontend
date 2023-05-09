@@ -13,6 +13,7 @@ import AddMountain from "./mountains/AddMountain";
 import EditMountain from "./mountains/EditMountain";
 import Lake from "./pages/Lake";
 import AddLake from "./lakes/AddLake";
+import EditLake from "./lakes/EditLake";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             path="/editcountry/:id"
             element={<EditCountry />}
           ></Route>
+          <Route exact path="/editlake/:id" element={<EditLake />}></Route>
         </Routes>
       </Router>
     </div>
