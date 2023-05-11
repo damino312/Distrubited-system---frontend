@@ -14,6 +14,7 @@ import EditMountain from "./mountains/EditMountain";
 import Lake from "./pages/Lake";
 import AddLake from "./lakes/AddLake";
 import EditLake from "./lakes/EditLake";
+import CountryView from "./countries/CountryView";
 
 function App() {
   return (
@@ -21,6 +22,12 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
+          <Route
+            exact
+            path="/countryview/:id"
+            element={<CountryView />}
+          ></Route>
+
           <Route exact path="/" element={<Home />}></Route>
           <Route exact path="/country" element={<Country />}></Route>
           <Route exact path="/river" element={<River />}></Route>
