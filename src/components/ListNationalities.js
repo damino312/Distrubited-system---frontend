@@ -1,29 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 export default function ListNationalities(props) {
-  const [nationalities, setNationalities] = useState([]);
-
-  useEffect(() => {
-    enableCheck();
-  }, []);
-
-  function enableCheck() {
-    let obj = [];
-    // включает чекбоксы при редактировании записи
-    if (!props.checks) return null;
-    const idList = props.checks;
-    const checkboxes = Array.from(document.querySelectorAll("#id_nationality"));
-    checkboxes.forEach((element) => {
-      //если id чекбокса совпадает с id стран выбранного элемента, то данные этих чекбоксов передаюся по дефолту на форму редактирования
-      if (idList.includes(parseInt(element.value))) {
-        element.checked = true;
-        const nationality = JSON.parse(element.dataset.nationality);
-        obj.push(nationality);
-      }
-    });
-    setNationalities(obj);
-    props.passCheckedNationalities(obj);
-  }
+  const [currentData, setCurrentData] = useState({
+    nationalities: [],
+    population: [],
+  });
 
   function handleChange(e) {
     // работа нажатия чекбоксов - передает на родительскую форму редактирования данные о выбранных чекбоксах
@@ -31,31 +12,73 @@ export default function ListNationalities(props) {
     const nationality = JSON.parse(nationalityData);
     const isChecked = e.target.checked;
 
-    const rowId = document.getElementById(`t${e.target.id[1]}`); // [1] чтобы второй символ (цифру) взять из e.target.id
-
+    const rowId = document.getElementById(`t${e.target.id.slice(1)}`); // [1] чтобы второй символ (цифру) взять из e.target.id
     if (isChecked) {
-      setNationalities([...nationalities, nationality]);
-      props.passCheckedNationalities([...nationalities, nationality]);
-      rowId.disabled = false;
-    } else {
-      setNationalities(
-        nationalities.filter(
-          (c) => c.id_nationality !== nationality.id_nationality
-        )
-      );
+      setCurrentData({
+        ...currentData, // распыляем текущие значения из currentData
+        nationalities: [...currentData.nationalities, nationality], // создаем новый массив nationalities
+      });
+      props.passData({
+        //для родителя
+        ...currentData, // распыляем текущие значения из currentData
+        nationalities: [...currentData.nationalities, nationality], // создаем новый массив nationalities
+      });
 
-      props.passCheckedNationalities(
-        nationalities.filter(
-          (c) => c.id_nationality !== nationality.id_nationality
-        )
+      rowId.disabled = false;
+      // console.log(currentData);
+    } else {
+      // галку убираем
+      const updatedNationalities = currentData.nationalities.filter(
+        // удаляем народ под убранной галкой
+        (n) => n.id_nationality !== nationality.id_nationality
       );
-      rowId.disabled = true;
-      rowId.value = 0;
+      const updatedPopulation = currentData.population.filter(
+        // удаляем строку с количеством народа под убранной галкой
+        (e) => e.id_population !== nationality.id_nationality
+      );
+      setCurrentData({
+        //обновляем инфу
+        population: updatedPopulation,
+        nationalities: updatedNationalities,
+      });
+      props.passData({
+        //для родителя
+        //обновляем инфу
+        population: updatedPopulation,
+        nationalities: updatedNationalities,
+      });
+
+      rowId.disabled = true; //вырубаем текстовое поле около отключенной галки
+      rowId.value = ""; // очищаем текстовое поле
     }
   }
 
   function handleText(e) {
-    const checkbox = document.getElementById(`c${e.target.id[1]}`); // [1] чтобы второй символ (цифру) взять из e.target.id
+    const checkbox = document.getElementById(`c${e.target.id.slice(1)}`);
+
+    const id_population = Number(checkbox.value);
+
+    const populationIndex = currentData.population.findIndex(
+      (p) => p.id_population === id_population
+    );
+
+    if (populationIndex !== -1) {
+      setCurrentData({
+        ...currentData,
+        population: currentData.population.map((p, i) =>
+          i === populationIndex ? { ...p, populationText: e.target.value } : p
+        ),
+      });
+    } else {
+      setCurrentData({
+        ...currentData,
+        population: [
+          ...currentData.population,
+          { id_population: id_population, populationText: e.target.value },
+        ],
+      });
+    }
+    console.log(currentData);
   }
   return (
     <div className="accordion" id="accordionExample">
@@ -90,9 +113,11 @@ export default function ListNationalities(props) {
                     aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-sm"
                     disabled={true}
-                    onChange={handleText}
+                    onChange={(e) => {
+                      e.target.value = e.target.value.slice(0, 7);
+                      handleText(e);
+                    }}
                     id={"t" + index}
-                    value={0}
                   ></input>
                 </div>
 

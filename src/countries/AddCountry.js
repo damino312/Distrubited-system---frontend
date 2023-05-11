@@ -2,17 +2,22 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ListNationalities from "../components/ListNationalities";
+import { data } from "jquery";
 
 export default function AddCountry() {
   let navigate = useNavigate();
 
   const [nationalities, setNationalities] = useState([]); // для передачи всех национальностей на доч. форму
 
-  const [checkedNationalities, setCheckedNationalities] = useState("");
+  const [currentData, setCurrentData] = useState({
+    nationalities: [],
+    population: [],
+  });
 
-  function passCheckedNationalities(msg) {
+  function passData(msg) {
     // для передачи выбранных чекбоксом национальностей из дочернего элемента
-    setCheckedNationalities(msg);
+    setCurrentData(msg);
+    console.log(currentData);
   }
 
   const loadNationalities = async () => {
@@ -42,25 +47,33 @@ export default function AddCountry() {
     // если не добавиться страна, а алгоритм дальше пойдет, то привяжется к другому или ошибка вылетит - потом поставить условие
     e.preventDefault();
 
-    await axios.post("http://localhost:8080/country", country); // добавляет и получает id - как получить этот id?
+    // await axios.post("http://localhost:8080/country", country);
 
-    let objId = await axios.get("http://localhost:8080/counties/last-record");
+    // let objId = await axios.get("http://localhost:8080/counties/last-record");
 
-    checkedNationalities.forEach(async (element) => {
+    // currentData.forEach(async (element) => {
+    //   // массив - так как за раз несколько национальностей можно выбрать на доч
+    //   delete element.populations;
+    //   let countryNationality = {
+    //     country_link: { ...country, id_country: objId.data.id_country },
+    //     nationality_link: element,
+    //     population: 1234,
+    //   };
+    //   console.log(countryNationality);
+    //   await axios.post(
+    //     "http://localhost:8080/country-nationality",
+    //     countryNationality
+    //   );
+    // });
+
+    currentData.forEach((element) => {
       // массив - так как за раз несколько национальностей можно выбрать на доч
       delete element.populations;
-      let countryNationality = {
-        country_link: { ...country, id_country: objId.data.id_country },
-        nationality_link: element,
-        population: 1234,
-      };
-      console.log(countryNationality);
-      await axios.post(
-        "http://localhost:8080/country-nationality",
-        countryNationality
-      );
+
+      console.log(element); // создать массив объектов для отправки на промежтуточную таблицу
     });
-    navigate("/country");
+
+    // navigate("/country");
   };
 
   return (
@@ -79,7 +92,9 @@ export default function AddCountry() {
                 placeholder="Введите название страны"
                 name="name_country"
                 value={name_country}
-                onChange={(e) => onInputChange(e)}
+                onChange={(e) => {
+                  onInputChange(e);
+                }}
               ></input>
             </div>
 
@@ -131,7 +146,7 @@ export default function AddCountry() {
               {nationalities.length && ( // чтобы ListCountries рендерилась один раз
                 <ListNationalities
                   nationalities={nationalities}
-                  passCheckedNationalities={passCheckedNationalities}
+                  passData={passData}
                 />
               )}
             </div>
