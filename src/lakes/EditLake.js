@@ -10,7 +10,7 @@ export default function EditLake() {
 
   const [lake, setLake] = useState({
     name_lake: "",
-    height_lake: "",
+    area_lake: "",
     countries_lake: [],
   });
 
@@ -33,6 +33,10 @@ export default function EditLake() {
 
   const [checkedCountries, setCheckedCountries] = useState(""); // для передачи выбранных чекбоксом стран из дочернего элемента
   function passCheckedCountries(msg) {
+    msg.forEach((element) => {
+      // толи цикл возникает из за этого поля, толи что то другое, поэтому удаляю
+      delete element.populations;
+    });
     setCheckedCountries(msg);
   }
 

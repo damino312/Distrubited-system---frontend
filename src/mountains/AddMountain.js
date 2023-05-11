@@ -23,6 +23,10 @@ export default function AddMountain() {
 
   function passCheckedCountries(msg) {
     // для передачи выбранных чекбоксом стран из дочернего элемента
+    msg.forEach((element) => {
+      // толи цикл возникает из за этого поля, толи что то другое, поэтому удаляю
+      delete element.populations;
+    });
     setCheckedCountries(msg);
   }
 

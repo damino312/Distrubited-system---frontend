@@ -33,6 +33,10 @@ export default function EditMountain() {
 
   const [checkedCountries, setCheckedCountries] = useState(""); // для передачи выбранных чекбоксом стран из дочернего элемента
   function passCheckedCountries(msg) {
+    msg.forEach((element) => {
+      // толи цикл возникает из за этого поля, толи что то другое, поэтому удаляю
+      delete element.populations;
+    });
     setCheckedCountries(msg);
   }
 

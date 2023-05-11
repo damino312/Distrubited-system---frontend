@@ -42,6 +42,12 @@ export default function Home() {
               <td>{country.population_country}</td>
               <td>
                 <Link
+                  className="btn btn-outline-info mx-2"
+                  to={`/countryview/${country.id_country}`}
+                >
+                  Информация
+                </Link>
+                <Link
                   className="btn btn-outline-primary mx-2"
                   to={`/editcountry/${country.id_country}`}
                 >
