@@ -29,7 +29,9 @@ export default function Home() {
             <th scope="col">Столица</th>
             <th scope="col">Площадь, кв.км.</th>
             <th scope="col">Население</th>
-            <th scope="col">Действие</th>
+            <th scope="col" className="text-center">
+              Действие
+            </th>
           </tr>
         </thead>
         <tbody>
