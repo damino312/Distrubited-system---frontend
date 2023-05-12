@@ -69,6 +69,12 @@ export default function ListNationalities(props) {
           i === populationIndex ? { ...p, populationText: e.target.value } : p
         ),
       });
+      props.passData({
+        ...currentData,
+        population: currentData.population.map((p, i) =>
+          i === populationIndex ? { ...p, populationText: e.target.value } : p
+        ),
+      });
     } else {
       setCurrentData({
         ...currentData,
@@ -77,8 +83,14 @@ export default function ListNationalities(props) {
           { id_population: id_population, populationText: e.target.value },
         ],
       });
+      props.passData({
+        ...currentData,
+        population: [
+          ...currentData.population,
+          { id_population: id_population, populationText: e.target.value },
+        ],
+      });
     }
-    console.log(currentData);
   }
   return (
     <div className="accordion" id="accordionExample">

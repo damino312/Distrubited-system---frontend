@@ -47,33 +47,34 @@ export default function AddCountry() {
     // если не добавиться страна, а алгоритм дальше пойдет, то привяжется к другому или ошибка вылетит - потом поставить условие
     e.preventDefault();
 
-    // await axios.post("http://localhost:8080/country", country);
+    await axios.post("http://localhost:8080/country", country); // добавляем страну
 
-    // let objId = await axios.get("http://localhost:8080/counties/last-record");
+    let addedCountry = await axios.get(
+      // получаем последнюю добавленную страну (строка выше)
+      "http://localhost:8080/counties/last-record"
+    );
 
-    // currentData.forEach(async (element) => {
-    //   // массив - так как за раз несколько национальностей можно выбрать на доч
-    //   delete element.populations;
-    //   let countryNationality = {
-    //     country_link: { ...country, id_country: objId.data.id_country },
-    //     nationality_link: element,
-    //     population: 1234,
-    //   };
-    //   console.log(countryNationality);
-    //   await axios.post(
-    //     "http://localhost:8080/country-nationality",
-    //     countryNationality
-    //   );
-    // });
+    for (let i = 0; i < currentData.nationalities.length; i++) {
+      // постим каждую countryNationality, которую выбрали чекбоксом на дочерней форме
+      let populationObj = currentData.population.find(
+        // делаем совпадение по id, чтобы совместить национальность и строку с количеством народа
+        (obj) =>
+          obj.id_population === currentData.nationalities[i].id_nationality
+      );
 
-    currentData.forEach((element) => {
-      // массив - так как за раз несколько национальностей можно выбрать на доч
-      delete element.populations;
+      let countryNationality = {
+        country_link: { ...country, id_country: addedCountry.data.id_country },
+        nationality_link: currentData.nationalities[i],
+        population: Number(populationObj.populationText),
+      };
+      console.log(countryNationality);
+      await axios.post(
+        "http://localhost:8080/country-nationality",
+        countryNationality
+      );
+    }
 
-      console.log(element); // создать массив объектов для отправки на промежтуточную таблицу
-    });
-
-    // navigate("/country");
+    navigate("/country");
   };
 
   return (
