@@ -1,40 +1,77 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import ListNationalities from "../components/ListNationalities";
 
 export default function EditCountry() {
   let navigate = useNavigate();
-
   const { id } = useParams();
-
+  const [nationalities, setNationalities] = useState([]); // для передачи всех национальностей на доч. форму
+  const [currentData, setCurrentData] = useState({
+    nationalities: [],
+    population: [],
+  });
   const [country, setCountry] = useState({
     name_country: "",
     capital_country: "",
     area_country: "",
     population_country: "",
   });
-
   const { name_country, capital_country, area_country, population_country } =
     country;
+
+  function passData(msg) {
+    // для передачи выбранных чекбоксом национальностей из дочернего элемента
+    setCurrentData(msg);
+    // console.log(msg);
+  }
+
+  const loadCountry = useCallback(async () => {
+    const result = await axios.get(`http://localhost:8080/country/${id}`);
+    setCountry(result.data);
+  }, [id]);
+
+  useEffect(() => {
+    loadCountry();
+  }, [loadCountry]);
+  const loadNationalities = async () => {
+    const result = await axios.get("http://localhost:8080/nationalities");
+    setNationalities(result.data);
+  };
+
+  useEffect(() => {
+    loadNationalities();
+  }, []);
 
   const onInputChange = (e) => {
     setCountry({ ...country, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    loadCountry();
-    // eslint-disable-next-line
-  }, [id]);
-
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(`http://localhost:8080/country/${id}`, country);
-    navigate("/");
-  };
 
-  const loadCountry = async () => {
-    const result = await axios.get(`http://localhost:8080/country/${id}`);
-    setCountry(result.data);
+    // await axios.put("http://localhost:8080/country", country); // изменяем страну
+    console.log(country);
+
+    for (let i = 0; i < currentData.nationalities.length; i++) {
+      // изменяем каждую countryNationality, которую выбрали чекбоксом на дочерней форме
+      let populationObj = currentData.population.find(
+        // делаем совпадение по id, чтобы совместить национальность и строку с количеством народа
+        (obj) =>
+          obj.id_population === currentData.nationalities[i].id_nationality
+      );
+
+      let countryNationality = {
+        country_link: { ...country, id_country: country.id_country },
+        nationality_link: currentData.nationalities[i],
+        population: Number(populationObj.populationText),
+      };
+      console.log(countryNationality);
+      // await axios.post(
+      //   "http://localhost:8080/country-nationality",
+      //   countryNationality
+      // );
+    }
   };
 
   return (
@@ -95,6 +132,22 @@ export default function EditCountry() {
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
+            <div className="mb-3">
+              <label htmlFor="population_country" className="form-label">
+                Население
+              </label>
+              {nationalities.length && ( // чтобы ListCountries рендерилась один раз
+                <ListNationalities
+                  nationalities={nationalities}
+                  passData={passData}
+                  populations={country.populations.map((obj) => ({
+                    id: obj.id.idNationality,
+                    population: obj.population,
+                  }))}
+                />
+              )}
+            </div>
+
             <button type="submit" className="btn btn-outline-primary">
               Подтвердить
             </button>

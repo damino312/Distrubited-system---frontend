@@ -17,7 +17,7 @@ export default function AddCountry() {
   function passData(msg) {
     // для передачи выбранных чекбоксом национальностей из дочернего элемента
     setCurrentData(msg);
-    console.log(currentData);
+    // console.log(currentData);
   }
 
   const loadNationalities = async () => {

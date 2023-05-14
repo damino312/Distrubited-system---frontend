@@ -52,7 +52,6 @@ export default function EditMountain() {
     };
     await axios.put(`http://localhost:8080/mountain/${id}`, updatedMountain);
     navigate("/mountain");
-    console.log(mountain);
   };
 
   const loadMountain = async () => {

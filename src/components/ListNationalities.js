@@ -6,13 +6,71 @@ export default function ListNationalities(props) {
     population: [],
   });
 
-  function handleChange(e) {
-    // работа нажатия чекбоксов - передает на родительскую форму редактирования данные о выбранных чекбоксах
-    const nationalityData = e.target.dataset.nationality;
-    const nationality = JSON.parse(nationalityData);
-    const isChecked = e.target.checked;
+  const [nationalities, setNationalities] = useState([]);
+  const [checkboxes, setCheckboxes] = useState([]);
+  const [textinputs, setTextinputs] = useState([]);
 
-    const rowId = document.getElementById(`t${e.target.id.slice(1)}`); // [1] чтобы второй символ (цифру) взять из e.target.id
+  useEffect(() => {
+    enableCheck();
+  }, []);
+
+  function enableCheck() {
+    let obj = {
+      nationalities: [],
+      population: [],
+    };
+    const populations = props.populations;
+
+    if (populations === undefined) return null;
+    const idPopulations = populations.map((obj) => obj.id);
+    const checkboxes = Array.from(
+      document.querySelectorAll('[data-input="checkbox"]')
+    );
+    setCheckboxes(checkboxes);
+    const textinputs = Array.from(
+      document.querySelectorAll('[data-input="text"]')
+    );
+    setTextinputs(textinputs);
+
+    checkboxes.forEach((element) => {
+      //если id чекбокса совпадает с id стран выбранного элемента, то данные этих чекбоксов передаюся по дефолту на форму редактирования
+      if (idPopulations.includes(parseInt(element.value))) {
+        element.checked = true;
+
+        const textInputId = element.id.slice(1); // получаем textinput определенного checkbox
+
+        const textinput = textinputs.find(
+          (obj) => obj.id === "t" + textInputId
+        );
+        textinput.disabled = false;
+
+        const populationNumber = populations.find(
+          (obj) => obj.id === parseInt(element.value)
+        ).population; //количество людей для определенного textinput
+        textinput.value = populationNumber;
+        //
+        const nationality = JSON.parse(element.dataset.nationality);
+
+        obj.nationalities.push(nationality);
+        obj.population.push({
+          id_population: Number(element.value),
+          populationText: populationNumber,
+        });
+      }
+    });
+    setCurrentData(obj);
+    props.passData(obj);
+  }
+
+  function handleChange(e) {
+    setCurrentData((currentData) => ({ ...currentData }));
+    const element = e.currentTarget ? e.currentTarget : e;
+    // работа нажатия чекбоксов - передает на родительскую форму редактирования данные о выбранных чекбоксах
+    const nationalityData = element.dataset.nationality;
+    const nationality = JSON.parse(nationalityData);
+    const isChecked = element.checked;
+
+    const rowId = document.getElementById(`t${element.id.slice(1)}`); // [1] чтобы второй символ (цифру) взять из e.target.id
     if (isChecked) {
       setCurrentData({
         ...currentData, // распыляем текущие значения из currentData
@@ -25,8 +83,9 @@ export default function ListNationalities(props) {
       });
 
       rowId.disabled = false;
-      // console.log(currentData);
     } else {
+      console.log(currentData);
+      console.log(currentData.nationalities);
       // галку убираем
       const updatedNationalities = currentData.nationalities.filter(
         // удаляем народ под убранной галкой
@@ -54,7 +113,9 @@ export default function ListNationalities(props) {
   }
 
   function handleText(e) {
-    const checkbox = document.getElementById(`c${e.target.id.slice(1)}`);
+    setCurrentData((currentData) => ({ ...currentData }));
+    const element = e.currentTarget ? e.currentTarget : e;
+    const checkbox = document.getElementById(`c${element.id.slice(1)}`);
 
     const id_population = Number(checkbox.value);
 
@@ -66,13 +127,13 @@ export default function ListNationalities(props) {
       setCurrentData({
         ...currentData,
         population: currentData.population.map((p, i) =>
-          i === populationIndex ? { ...p, populationText: e.target.value } : p
+          i === populationIndex ? { ...p, populationText: element.value } : p
         ),
       });
       props.passData({
         ...currentData,
         population: currentData.population.map((p, i) =>
-          i === populationIndex ? { ...p, populationText: e.target.value } : p
+          i === populationIndex ? { ...p, populationText: element.value } : p
         ),
       });
     } else {
@@ -80,14 +141,20 @@ export default function ListNationalities(props) {
         ...currentData,
         population: [
           ...currentData.population,
-          { id_population: id_population, populationText: e.target.value },
+          {
+            id_population: id_population,
+            populationText: element.value,
+          },
         ],
       });
       props.passData({
         ...currentData,
         population: [
           ...currentData.population,
-          { id_population: id_population, populationText: e.target.value },
+          {
+            id_population: id_population,
+            populationText: element.value,
+          },
         ],
       });
     }
@@ -125,11 +192,12 @@ export default function ListNationalities(props) {
                     aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-sm"
                     disabled={true}
-                    onChange={(e) => {
-                      e.target.value = e.target.value.slice(0, 7);
-                      handleText(e);
-                    }}
+                    onInput={handleText.bind(this)}
+                    onChange={(e) =>
+                      (e.target.value = e.target.value.slice(0, 7))
+                    }
                     id={"t" + index}
+                    data-input="text"
                   ></input>
                 </div>
 
@@ -137,9 +205,10 @@ export default function ListNationalities(props) {
                   className="form-check-input m-0  p-2 d-block"
                   type="checkbox"
                   value={nationality.id_nationality}
-                  onChange={handleChange}
+                  onChange={handleChange.bind(this)}
                   id={"c" + index}
                   data-nationality={JSON.stringify(nationality)}
+                  data-input="checkbox"
                 ></input>
 
                 <label
