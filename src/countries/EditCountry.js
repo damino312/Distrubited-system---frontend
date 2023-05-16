@@ -131,7 +131,7 @@ export default function EditCountry() {
         );
         console.log("added value");
       }
-      navigate("/country");
+      
     }
 
     // removedElements содержит элементы из countryPopulations, которые были удалены (чекбокс убран)
@@ -140,6 +140,7 @@ export default function EditCountry() {
         `http://localhost:8080/country-nationality/${country.id_country}/${removedElements[i]}`
       );
     }
+    navigate("/country");
   };
 
   return (

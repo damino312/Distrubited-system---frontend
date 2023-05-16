@@ -15,6 +15,7 @@ import Lake from "./pages/Lake";
 import AddLake from "./lakes/AddLake";
 import EditLake from "./lakes/EditLake";
 import CountryView from "./countries/CountryView";
+import Nationality from "./pages/Nationality";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route exact path="/river" element={<River />}></Route>
           <Route exact path="/mountain" element={<Mountain />}></Route>
           <Route exact path="/lake" element={<Lake />}></Route>
+          <Route exact path="/nationality" element={<Nationality />}></Route>
 
           <Route exact path="/addcountry" element={<AddCountry />}></Route>
           <Route exact path="/addmountain" element={<AddMountain />}></Route>
