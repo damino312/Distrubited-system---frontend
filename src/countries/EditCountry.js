@@ -50,27 +50,95 @@ export default function EditCountry() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // await axios.put("http://localhost:8080/country", country); // изменяем страну
-    console.log(country);
+    let populationSum = currentData.population.reduce(
+      (accumulator, current) => accumulator + Number(current.populationText),
+      0
+    );
 
-    for (let i = 0; i < currentData.nationalities.length; i++) {
-      // изменяем каждую countryNationality, которую выбрали чекбоксом на дочерней форме
+    const countryPopulations = country.populations.map(
+      (obj) => obj.id.idNationality
+    );
+
+    // чтобы потом понять какой запрос делать delete или save
+    const addedElements = currentData.nationalities
+      .map((element) => element.id_nationality)
+      .filter((element) => !countryPopulations.includes(element));
+    // чтобы потом понять какой запрос делать delete или save
+    const removedElements = countryPopulations.filter(
+      (element) =>
+        !currentData.nationalities
+          .map((obj) => obj.id_nationality)
+          .includes(element)
+    );
+
+    //совместить  currentData.nationalities и countryPopulations и пустить for по их длине
+    let fullArray = [
+      ...new Set(
+        currentData.nationalities
+          .map((obj) => obj.id_nationality)
+          .concat(countryPopulations)
+      ),
+    ];
+
+    await axios.put(`http://localhost:8080/country/${id}`, {
+      ...country,
+      population_country: populationSum,
+    }); // изменяем страну
+
+    for (let i = 0; i < fullArray.length; i++) {
+      //пропускаем удаленные объекты (по идеи можно просто fullArray.length поставить другую и пойдет, а может не пойдет, можно чекнуть )
+      if (currentData.nationalities[i] === undefined) {
+        console.log("removed value");
+        continue;
+      }
+
+      // делаем совпадение по id, чтобы совместить национальность и строку с количеством людей данной национальности в стране
       let populationObj = currentData.population.find(
-        // делаем совпадение по id, чтобы совместить национальность и строку с количеством народа
         (obj) =>
           obj.id_population === currentData.nationalities[i].id_nationality
       );
 
+      //создаем объект для post или put
       let countryNationality = {
-        country_link: { ...country, id_country: country.id_country },
+        country_link: country,
         nationality_link: currentData.nationalities[i],
-        population: Number(populationObj.populationText),
+        population: Number(
+          populationObj ? populationObj.populationText : "100" // если поле напротив чекбокса пустое, то стандартное значение - 100
+        ),
       };
-      console.log(countryNationality);
-      // await axios.post(
-      //   "http://localhost:8080/country-nationality",
-      //   countryNationality
-      // );
+      // удаляю эти поля, чтобы избежать ошибки (мб еще появляется, мб нет, лень проверять)
+      delete countryNationality.country_link.populations;
+      delete countryNationality.nationality_link.populations;
+
+      if (
+        countryPopulations.includes(
+          countryNationality.nationality_link.id_nationality
+        )
+      ) {
+        await axios.put(
+          `http://localhost:8080/country-nationality/${country.id_country}/${currentData.nationalities[i].id_nationality}`,
+          countryNationality
+        );
+        console.log("changed value");
+      } else if (
+        addedElements.includes(
+          countryNationality.nationality_link.id_nationality
+        )
+      ) {
+        await axios.post(
+          "http://localhost:8080/country-nationality",
+          countryNationality
+        );
+        console.log("added value");
+      }
+      navigate("/country");
+    }
+
+    // removedElements содержит элементы из countryPopulations, которые были удалены (чекбокс убран)
+    for (let i = 0; i < removedElements.length; i++) {
+      await axios.delete(
+        `http://localhost:8080/country-nationality/${country.id_country}/${removedElements[i]}`
+      );
     }
   };
 
@@ -78,7 +146,7 @@ export default function EditCountry() {
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
-          <h2 className="text-center m-4">Adding Country</h2>
+          <h2 className="text-center m-4">Изменение страны</h2>
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
               <label htmlFor="name_country" className="form-label">
@@ -116,19 +184,6 @@ export default function EditCountry() {
                 placeholder="Введите площадь"
                 name="area_country"
                 value={area_country}
-                onChange={(e) => onInputChange(e)}
-              ></input>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="population_country" className="form-label">
-                Население
-              </label>
-              <input
-                type={"text"}
-                className="form-control"
-                placeholder="Введите население"
-                name="population_country"
-                value={population_country}
                 onChange={(e) => onInputChange(e)}
               ></input>
             </div>
