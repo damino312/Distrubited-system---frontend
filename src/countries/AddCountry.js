@@ -17,7 +17,6 @@ export default function AddCountry() {
   function passData(msg) {
     // для передачи выбранных чекбоксом национальностей из дочернего элемента
     setCurrentData(msg);
-    // console.log(currentData);
   }
 
   const loadNationalities = async () => {
@@ -47,7 +46,15 @@ export default function AddCountry() {
     // если не добавиться страна, а алгоритм дальше пойдет, то привяжется к другому или ошибка вылетит - потом поставить условие
     e.preventDefault();
 
-    await axios.post("http://localhost:8080/country", country); // добавляем страну
+    let populationSum = currentData.population.reduce(
+      (accumulator, current) => accumulator + Number(current.populationText),
+      0
+    );
+
+    await axios.post("http://localhost:8080/country", {
+      ...country,
+      population_country: populationSum,
+    }); // добавляем страну
 
     let addedCountry = await axios.get(
       // получаем последнюю добавленную страну (строка выше)
@@ -65,8 +72,12 @@ export default function AddCountry() {
       let countryNationality = {
         country_link: { ...country, id_country: addedCountry.data.id_country },
         nationality_link: currentData.nationalities[i],
-        population: Number(populationObj.populationText),
+        population: Number(
+          populationObj ? populationObj.populationText : "100" // если поле напротив чекбокса пустое, то стандартное значение - 100
+        ),
       };
+      delete countryNationality.country_link.populations;
+      delete countryNationality.nationality_link.populations;
       console.log(countryNationality);
       await axios.post(
         "http://localhost:8080/country-nationality",
@@ -127,19 +138,6 @@ export default function AddCountry() {
               ></input>
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="population_country" className="form-label">
-                Население
-              </label>
-              <input
-                type={"text"}
-                className="form-control"
-                placeholder="Введите население"
-                name="population_country"
-                value={population_country}
-                onChange={(e) => onInputChange(e)}
-              ></input>
-            </div>
             <div className="mb-3">
               <label htmlFor="population_country" className="form-label">
                 Население
