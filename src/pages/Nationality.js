@@ -7,12 +7,13 @@ export default function Nationality() {
 
   useEffect(() => {
     loadNationalities();
-  });
+  }, []);
 
   const loadNationalities = async () => {
     const result = await axios.get("http://localhost:8080/nationalities");
     setNationalities(result.data);
   };
+
 
   const deleteNationality = async (id) => {
     await axios.delete(`http://localhost:8080/nationality/${id}`);

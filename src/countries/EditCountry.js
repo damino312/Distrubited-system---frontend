@@ -192,7 +192,8 @@ export default function EditCountry() {
               <label htmlFor="population_country" className="form-label">
                 Население
               </label>
-              {nationalities.length && ( // чтобы ListCountries рендерилась один раз
+              {console.log(country.name_country != "")}
+              {nationalities.length && country.name_country !== "" && (
                 <ListNationalities
                   nationalities={nationalities}
                   passData={passData}
