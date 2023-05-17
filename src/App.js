@@ -16,6 +16,7 @@ import AddLake from "./lakes/AddLake";
 import EditLake from "./lakes/EditLake";
 import CountryView from "./countries/CountryView";
 import Nationality from "./pages/Nationality";
+import NationalityView from "./nationalities/NationalityView";
 
 function App() {
   return (
@@ -27,6 +28,11 @@ function App() {
             exact
             path="/countryview/:id"
             element={<CountryView />}
+          ></Route>
+          <Route
+            exact
+            path="/nationalityview/:id"
+            element={<NationalityView />}
           ></Route>
 
           <Route exact path="/" element={<Home />}></Route>

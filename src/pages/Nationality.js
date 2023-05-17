@@ -32,8 +32,12 @@ export default function Nationality() {
       <table className="table border shadow ">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Национальность</th>
+            <th scope="col" className="text-center">
+              #
+            </th>
+            <th scope="col" className="text-center">
+              Национальность
+            </th>
             <th scope="col" className="text-center">
               Действие
             </th>
@@ -43,7 +47,7 @@ export default function Nationality() {
           {nationalities.map((nationality, index) => (
             <tr key={index}>
               <th scope="row">{index + 1}</th>
-              <td>{nationality.name_nationality}</td>
+              <td className="text-center">{nationality.name_nationality}</td>
               <td>
                 <Link
                   className="btn btn-outline-info mx-2 "
