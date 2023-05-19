@@ -115,7 +115,7 @@ export default function Home() {
           <input
             type="text"
             className="form-control"
-            placeholder="Поиск по озерам"
+            placeholder="Поиск по названию"
             value={searchLake}
             onChange={(e) => handleFilterChange("searchLake", e.target.value)}
           />
@@ -151,7 +151,7 @@ export default function Home() {
         </div>
       </div>
       <div className="p-2">
-        <table className="table border shadow">
+        <table className="table rounded rounded-4 overflow-hidden border shadow">
           <thead>
             <tr>
               <th scope="col" className="text-center">
