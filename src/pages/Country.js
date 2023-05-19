@@ -4,15 +4,16 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   const [countries, setCountries] = useState([]);
-  const [sortField, setSortField] = useState("name_country");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const [areaFrom, setAreaFrom] = useState("");
-  const [areaTo, setAreaTo] = useState("");
-
-  const [populationFrom, setPopulationFrom] = useState("");
-  const [populationTo, setPopulationTo] = useState("");
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    areaFrom: "",
+    areaTo: "",
+    populationFrom: "",
+    populationTo: "",
+    sortField: "name_country",
+    sortOrder: "asc",
+  });
+  const { sortField, sortOrder } = filters;
 
   useEffect(() => {
     loadCountries();
@@ -27,24 +28,31 @@ export default function Home() {
     await axios.delete(`http://localhost:8080/country/${id}`);
     loadCountries();
   };
-
+  //сортировка по столбцу
   const handleSort = (field) => {
-    if (sortField === field) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortField(field);
-      setSortOrder("asc");
-    }
+    setFilters((prevFilters) => {
+      if (prevFilters.sortField === field) {
+        return {
+          ...prevFilters,
+          sortOrder: prevFilters.sortOrder === "asc" ? "desc" : "asc",
+        };
+      } else {
+        return {
+          ...prevFilters,
+          sortField: field,
+          sortOrder: "asc",
+        };
+      }
+    });
   };
-
-  const handleAreaFromChange = (e) => {
-    setAreaFrom(e.target.value);
+  //фильтрация по полям "от" и "до"
+  const handleFilterChange = (field, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [field]: value,
+    }));
   };
-
-  const handleAreaToChange = (e) => {
-    setAreaTo(e.target.value);
-  };
-
+  //выставляем иконку
   const getSortIcon = (field) => {
     if (sortField === field) {
       return sortOrder === "asc" ? (
@@ -55,38 +63,33 @@ export default function Home() {
     }
     return <span style={{ width: "16px", display: "inline-block" }}></span>;
   };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // сортировка по столбцам
-  const sortedCountries = countries.sort((a, b) => {
+  //обрабатываем все филтры для каждой записи в таблице, если соответсвует каждому фильтру, то запись будет отображена
+  const filteredCountries = countries.filter((country) => {
+    const { searchTerm, areaFrom, areaTo, populationFrom, populationTo } =
+      filters;
+    // проверка поиска
+    const filteredBySearch = country.name_country
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    //проверка фильтрации
+    const filteredByArea =
+      (!areaFrom || country.area_country >= parseInt(areaFrom)) &&
+      (!areaTo || country.area_country <= parseInt(areaTo));
+    //проверка фильтрации
+    const filteredByPopulation =
+      (!populationFrom ||
+        country.population_country >= parseInt(populationFrom)) &&
+      (!populationTo || country.population_country <= parseInt(populationTo));
+    //если соответствует каждому полю то будет отображаться
+    return filteredBySearch && filteredByArea && filteredByPopulation;
+  });
+  // работа сортировка по столбцу
+  const sortedCountries = filteredCountries.sort((a, b) => {
     if (sortOrder === "asc") {
       return a[sortField] > b[sortField] ? 1 : -1;
     } else {
       return a[sortField] < b[sortField] ? 1 : -1;
     }
-  });
-
-  //поиск по имени
-  const filteredCountries = sortedCountries.filter((country) =>
-    country.name_country.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  //фильтрация
-  const filteredByArea = filteredCountries.filter((country) => {
-    if (areaFrom && areaTo) {
-      return (
-        country.area_country >= parseInt(areaFrom) &&
-        country.area_country <= parseInt(areaTo)
-      );
-    } else if (areaFrom) {
-      return country.area_country >= parseInt(areaFrom);
-    } else if (areaTo) {
-      return country.area_country <= parseInt(areaTo);
-    }
-    return true;
   });
 
   return (
@@ -98,26 +101,44 @@ export default function Home() {
             type="text"
             className="form-control"
             placeholder="Поиск по стране"
-            value={searchTerm}
-            onChange={handleSearch}
+            value={filters.searchTerm}
+            onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
           />
         </div>
         <div className="mb-3 ">
           <label className="mr-2">Площадь:</label>
-
           <input
             type="text"
             className="form-control mr-2 mb-2"
             placeholder="От"
-            value={areaFrom}
-            onChange={handleAreaFromChange}
+            value={filters.areaFrom}
+            onChange={(e) => handleFilterChange("areaFrom", e.target.value)}
           />
           <input
             type="text"
             className="form-control"
             placeholder="До"
-            value={areaTo}
-            onChange={handleAreaToChange}
+            value={filters.areaTo}
+            onChange={(e) => handleFilterChange("areaTo", e.target.value)}
+          />
+        </div>
+        <div className="mb-3 ">
+          <label className="mr-2">Население:</label>
+          <input
+            type="text"
+            className="form-control mr-2 mb-2"
+            placeholder="От"
+            value={filters.populationFrom}
+            onChange={(e) =>
+              handleFilterChange("populationFrom", e.target.value)
+            }
+          />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="До"
+            value={filters.populationTo}
+            onChange={(e) => handleFilterChange("populationTo", e.target.value)}
           />
         </div>
       </div>
@@ -144,7 +165,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {filteredByArea.map((country, index) => (
+            {sortedCountries.map((country, index) => (
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
                 <td>{country.name_country}</td>
