@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "react-bootstrap";
 import Navbar from "./layout/Navbar";
 import Home from "./pages/Home";
 import AddCountry from "./countries/AddCountry";
@@ -18,6 +19,7 @@ import EditLake from "./lakes/EditLake";
 import CountryView from "./countries/CountryView";
 import Nationality from "./pages/Nationality";
 import NationalityView from "./nationalities/NationalityView";
+import AddNationality from "./nationalities/AddNationality";
 
 function App() {
   return (
@@ -35,19 +37,22 @@ function App() {
             path="/nationalityview/:id"
             element={<NationalityView />}
           ></Route>
-
           <Route exact path="/" element={<Home />}></Route>
           <Route exact path="/country" element={<Country />}></Route>
           <Route exact path="/river" element={<River />}></Route>
           <Route exact path="/mountain" element={<Mountain />}></Route>
           <Route exact path="/lake" element={<Lake />}></Route>
           <Route exact path="/nationality" element={<Nationality />}></Route>
-
           <Route exact path="/addcountry" element={<AddCountry />}></Route>
           <Route exact path="/addmountain" element={<AddMountain />}></Route>
           <Route exact path="/addriver" element={<AddRiver />}></Route>
           <Route exact path="/addlake" element={<AddLake />}></Route>
-
+          <Route
+            exact
+            path="/addnationality"
+            element={<AddNationality />}
+          ></Route>
+          /addnationality
           <Route exact path="/editriver/:id" element={<EditRiver />}></Route>
           <Route
             exact

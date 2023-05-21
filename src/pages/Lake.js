@@ -51,7 +51,7 @@ export default function Home() {
       }
     });
   };
-  //фильтрация по полям "от" и "до"
+  //фильтрация по полям "от" и "до" и поиск
   const handleFilterChange = (field, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,

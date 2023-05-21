@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 export default function ListCountries(props) {
   const [countries, setCountries] = useState([]);
+  // const [sorted, setSorted] = useState(props.countries);
 
   useEffect(() => {
     enableCheck();
@@ -24,6 +25,16 @@ export default function ListCountries(props) {
     setCountries(obj);
     props.passCheckedCountries(obj);
   }
+  // const handleFilter = (value) => {
+  //   if (value === "") return setSorted(props.countries);
+
+  //   let result = props.countries.filter((country) =>
+  //     country.name_country.toLowerCase().includes(value.toLowerCase())
+  //   );
+
+  //   console.log(props.countries);
+  //   setSorted(result);
+  // }; // убирает чек боксы при редактировании
 
   function handleChange(e) {
     // работа нажатия чекбоксов - передает на родительскую форму редактирования данные о выбранных чекбоксах
@@ -43,44 +54,54 @@ export default function ListCountries(props) {
     }
   }
   return (
-    <div className="accordion" id="accordionExample">
-      <div className="accordion-item">
-        <h2 className="accordion-header">
-          <button
-            className="accordion-button"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseOne"
-            aria-expanded="true"
-            aria-controls="collapseOne"
+    <div>
+      {/* <input
+        type="text"
+        className="form-control mb-4 "
+        placeholder="Поиск по названию"
+        onChange={(e) => handleFilter(e.target.value)}
+      /> */}
+      <div className="accordion" id="accordionExample">
+        <div className="accordion-item">
+          <h2 className="accordion-header">
+            <button
+              className="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              Выберите страну
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            className="accordion-collapse collapse show"
+            data-bs-parent="#accordionExample"
           >
-            Выберите страну
-          </button>
-        </h2>
-        <div
-          id="collapseOne"
-          className="accordion-collapse collapse show"
-          data-bs-parent="#accordionExample"
-        >
-          <div className="accordion-body">
-            {props.countries.map((country) => (
-              <div className="form-check" key={country.id_country}>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value={country.id_country}
-                  onChange={handleChange}
-                  id="id_country"
-                  data-country={JSON.stringify(country)}
-                ></input>
-                <label
-                  className="form-check-label"
-                  htmlFor={country.id_country}
-                >
-                  {country.name_country}
-                </label>
-              </div>
-            ))}
+            <div className="accordion-body">
+              {props.countries
+                .sort((a, b) => a.name_country.localeCompare(b.name_country))
+                .map((country) => (
+                  <div className="form-check" key={country.id_country}>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value={country.id_country}
+                      onChange={handleChange}
+                      id="id_country"
+                      data-country={JSON.stringify(country)}
+                    ></input>
+                    <label
+                      className="form-check-label"
+                      htmlFor={country.id_country}
+                    >
+                      {country.name_country}
+                    </label>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       </div>

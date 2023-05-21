@@ -121,7 +121,7 @@ export default function Home() {
           />
         </div>
         <div className="mb-3 ">
-          <label className="mr-2">Площадь:</label>
+          <label className="mr-2">Длина:</label>
           <input
             type="text"
             className="form-control mr-2 mb-2"
