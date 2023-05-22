@@ -36,7 +36,7 @@ function App() {
             path="/nationalityview/:id"
             element={<NationalityView />}
           ></Route>
-          <Route exact path="/" element={<Home />}></Route>
+          <Route exact path="/" element={<Country />}></Route>
           <Route exact path="/country" element={<Country />}></Route>
           <Route exact path="/river" element={<River />}></Route>
           <Route exact path="/mountain" element={<Mountain />}></Route>

@@ -34,6 +34,7 @@ export default function EditCountry() {
   useEffect(() => {
     loadCountry();
   }, [loadCountry]);
+
   const loadNationalities = async () => {
     const result = await axios.get("http://localhost:8080/nationalities");
     setNationalities(result.data);

@@ -190,46 +190,50 @@ export default function ListNationalities(props) {
           data-bs-parent="#accordionExample"
         >
           <div className="accordion-body">
-            {props.nationalities.map((nationality, index) => (
-              <div
-                className="form-check d-flex flex-row mb-3 align-items-center"
-                key={nationality.id_nationality}
-              >
-                <div className="p-2 d-block">
-                  <input
-                    type="text"
-                    className="form-control form-control-sm"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-sm"
-                    disabled={true}
-                    onInput={handleText.bind(this)}
-                    onChange={(e) => {
-                      e.target.value = e.target.value.slice(0, 7);
-                      validateDigitInput(e);
-                    }}
-                    id={"t" + index}
-                    data-input="text"
-                  ></input>
-                </div>
-
-                <input
-                  className="form-check-input m-0  p-2 d-block"
-                  type="checkbox"
-                  value={nationality.id_nationality}
-                  onChange={handleChange.bind(this)}
-                  id={"c" + index}
-                  data-nationality={JSON.stringify(nationality)}
-                  data-input="checkbox"
-                ></input>
-
-                <label
-                  className="form-check-label p-2 d-block"
-                  htmlFor={nationality.id_nationality}
+            {props.nationalities
+              .sort((a, b) =>
+                a.name_nationality.localeCompare(b.name_nationality)
+              )
+              .map((nationality, index) => (
+                <div
+                  className="form-check d-flex flex-row mb-3 align-items-center"
+                  key={nationality.id_nationality}
                 >
-                  {nationality.name_nationality}
-                </label>
-              </div>
-            ))}
+                  <div className="p-2 d-block">
+                    <input
+                      type="text"
+                      className="form-control form-control-sm"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-sm"
+                      disabled={true}
+                      onInput={handleText.bind(this)}
+                      onChange={(e) => {
+                        e.target.value = e.target.value.slice(0, 7);
+                        validateDigitInput(e);
+                      }}
+                      id={"t" + index}
+                      data-input="text"
+                    ></input>
+                  </div>
+
+                  <input
+                    className="form-check-input m-0  p-2 d-block"
+                    type="checkbox"
+                    value={nationality.id_nationality}
+                    onChange={handleChange.bind(this)}
+                    id={"c" + index}
+                    data-nationality={JSON.stringify(nationality)}
+                    data-input="checkbox"
+                  ></input>
+
+                  <label
+                    className="form-check-label p-2 d-block"
+                    htmlFor={nationality.id_nationality}
+                  >
+                    {nationality.name_nationality}
+                  </label>
+                </div>
+              ))}
           </div>
         </div>
       </div>

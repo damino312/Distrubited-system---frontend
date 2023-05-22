@@ -168,9 +168,9 @@ export default function Home() {
               <th
                 scope="col"
                 className="text-center"
-                onClick={() => handleSort("name_height")}
+                onClick={() => handleSort("height_mountain")}
               >
-                Высота, м {getSortIcon("name_height")}
+                Высота, м {getSortIcon("height_mountain")}
               </th>
               <th scope="col" className="text-center">
                 Страны с этой горой

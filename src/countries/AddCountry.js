@@ -137,7 +137,7 @@ export default function AddCountry() {
                 Столица
               </label>
               <input
-                type={"number"}
+                type={"text"}
                 className="form-control"
                 placeholder="Введите столицу"
                 name="capital_country"
