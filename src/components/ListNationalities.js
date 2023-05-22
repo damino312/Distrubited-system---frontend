@@ -159,6 +159,16 @@ export default function ListNationalities(props) {
       });
     }
   }
+  function validateDigitInput(event) {
+    const input = event.target;
+    const inputValue = input.value;
+    const onlyDigits = /^\d+$/;
+
+    if (!onlyDigits.test(inputValue)) {
+      // Remove non-digit characters from the input value
+      input.value = inputValue.replace(/\D/g, "");
+    }
+  }
   return (
     <div className="accordion" id="accordionExample">
       <div className="accordion-item">
@@ -193,9 +203,10 @@ export default function ListNationalities(props) {
                     aria-describedby="inputGroup-sizing-sm"
                     disabled={true}
                     onInput={handleText.bind(this)}
-                    onChange={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
+                    onChange={(e) => {
+                      e.target.value = e.target.value.slice(0, 7);
+                      validateDigitInput(e);
+                    }}
                     id={"t" + index}
                     data-input="text"
                   ></input>

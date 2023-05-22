@@ -100,7 +100,7 @@ export default function Home() {
           <input
             type="text"
             className="form-control"
-            placeholder="Поиск по стране"
+            placeholder="Поиск по названию"
             value={filters.searchTerm}
             onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
           />
@@ -147,17 +147,33 @@ export default function Home() {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col" onClick={() => handleSort("name_country")}>
+              <th
+                scope="col"
+                className="text-center"
+                onClick={() => handleSort("name_country")}
+              >
                 Название страны {getSortIcon("name_country")}
               </th>
-              <th scope="col" onClick={() => handleSort("capital_country")}>
+              <th
+                scope="col"
+                className="text-center"
+                onClick={() => handleSort("capital_country")}
+              >
                 Столица {getSortIcon("capital_country")}
               </th>
-              <th scope="col" onClick={() => handleSort("area_country")}>
-                Площадь, кв.км. {getSortIcon("area_country")}
+              <th
+                scope="col"
+                className="text-center"
+                onClick={() => handleSort("area_country")}
+              >
+                Площадь, км² {getSortIcon("area_country")}
               </th>
-              <th scope="col" onClick={() => handleSort("population_country")}>
-                Население {getSortIcon("population_country")}
+              <th
+                scope="col"
+                className="text-center"
+                onClick={() => handleSort("population_country")}
+              >
+                Население, тыс. ч {getSortIcon("population_country")}
               </th>
               <th scope="col" className="text-center">
                 Действие
@@ -168,10 +184,10 @@ export default function Home() {
             {sortedCountries.map((country, index) => (
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
-                <td>{country.name_country}</td>
-                <td>{country.capital_country}</td>
-                <td>{country.area_country}</td>
-                <td>{country.population_country}</td>
+                <td className="text-center">{country.name_country}</td>
+                <td className="text-center">{country.capital_country}</td>
+                <td className="text-center">{country.area_country}</td>
+                <td className="text-center">{country.population_country}</td>
                 <td>
                   <Link
                     className="btn btn-outline-info mx-2"

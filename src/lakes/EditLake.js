@@ -80,7 +80,7 @@ export default function EditLake() {
             </div>
             <div className="mb-3">
               <label htmlFor="height_lake" className="form-label">
-                Площадь озера
+                Площадь озера, км²
               </label>
               <input
                 type={"number"}

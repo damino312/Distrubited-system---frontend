@@ -131,7 +131,6 @@ export default function EditCountry() {
         );
         console.log("added value");
       }
-      
     }
 
     // removedElements содержит элементы из countryPopulations, которые были удалены (чекбокс убран)
@@ -142,6 +141,28 @@ export default function EditCountry() {
     }
     navigate("/country");
   };
+
+  function validateLetterInput(event) {
+    const input = event.target;
+    const inputValue = input.value;
+    const onlyLetters = /^[A-Za-zА-Яа-я]+$/;
+
+    if (!onlyLetters.test(inputValue)) {
+      // Remove non-letter characters from the input value
+      input.value = inputValue.replace(/[^A-Za-zА-Яа-я]/g, "");
+    }
+  }
+
+  function validateDigitInput(event) {
+    const input = event.target;
+    const inputValue = input.value;
+    const onlyDigits = /^\d+$/;
+
+    if (!onlyDigits.test(inputValue)) {
+      // Remove non-digit characters from the input value
+      input.value = inputValue.replace(/\D/g, "");
+    }
+  }
 
   return (
     <div className="container">
@@ -160,6 +181,7 @@ export default function EditCountry() {
                 name="name_country"
                 value={name_country}
                 onChange={(e) => onInputChange(e)}
+                onInput={(e) => validateLetterInput(e)}
               ></input>
             </div>
             <div className="mb-3">
@@ -173,24 +195,26 @@ export default function EditCountry() {
                 name="capital_country"
                 value={capital_country}
                 onChange={(e) => onInputChange(e)}
+                onInput={(e) => validateLetterInput(e)}
               ></input>
             </div>
             <div className="mb-3">
               <label htmlFor="area_country" className="form-label">
-                Площадь
+                Площадь, км²
               </label>
               <input
-                type={"text"}
+                type={"number"}
                 className="form-control"
                 placeholder="Введите площадь"
                 name="area_country"
                 value={area_country}
                 onChange={(e) => onInputChange(e)}
+                onInput={(e) => validateDigitInput(e)}
               ></input>
             </div>
             <div className="mb-3">
               <label htmlFor="population_country" className="form-label">
-                Население
+                Население, тысяч. чел
               </label>
               {console.log(country.name_country != "")}
               {nationalities.length && country.name_country !== "" && (

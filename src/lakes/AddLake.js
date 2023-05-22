@@ -72,7 +72,7 @@ export default function AddLake() {
             </div>
             <div className="mb-3">
               <label htmlFor="area_lake" className="form-label">
-                Площадь озера
+                Площадь озера, км²
               </label>
               <input
                 type={"number"}

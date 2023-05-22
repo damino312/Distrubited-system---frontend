@@ -87,12 +87,33 @@ export default function AddCountry() {
 
     navigate("/country");
   };
+  function validateLetterInput(event) {
+    const input = event.target;
+    const inputValue = input.value;
+    const onlyLetters = /^[A-Za-zА-Яа-я]+$/;
+
+    if (!onlyLetters.test(inputValue)) {
+      // Remove non-letter characters from the input value
+      input.value = inputValue.replace(/[^A-Za-zА-Яа-я]/g, "");
+    }
+  }
+
+  function validateDigitInput(event) {
+    const input = event.target;
+    const inputValue = input.value;
+    const onlyDigits = /^\d+$/;
+
+    if (!onlyDigits.test(inputValue)) {
+      // Remove non-digit characters from the input value
+      input.value = inputValue.replace(/\D/g, "");
+    }
+  }
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
-          <h2 className="text-center m-4">Adding Country</h2>
+          <h2 className="text-center m-4">Добавление страны</h2>
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="mb-3">
               <label htmlFor="name_country" className="form-label">
@@ -107,6 +128,7 @@ export default function AddCountry() {
                 onChange={(e) => {
                   onInputChange(e);
                 }}
+                onInput={(e) => validateLetterInput(e)}
               ></input>
             </div>
 
@@ -115,18 +137,19 @@ export default function AddCountry() {
                 Столица
               </label>
               <input
-                type={"text"}
+                type={"number"}
                 className="form-control"
                 placeholder="Введите столицу"
                 name="capital_country"
                 value={capital_country}
                 onChange={(e) => onInputChange(e)}
+                onInput={(e) => validateLetterInput(e)}
               ></input>
             </div>
 
             <div className="mb-3">
               <label htmlFor="area_country" className="form-label">
-                Площадь
+                Площадь, км²
               </label>
               <input
                 type={"text"}
@@ -135,12 +158,13 @@ export default function AddCountry() {
                 name="area_country"
                 value={area_country}
                 onChange={(e) => onInputChange(e)}
+                onInput={(e) => validateDigitInput(e)}
               ></input>
             </div>
 
             <div className="mb-3">
               <label htmlFor="population_country" className="form-label">
-                Население
+                Население, тысяч. чел
               </label>
               {nationalities.length && ( // чтобы ListCountries рендерилась один раз
                 <ListNationalities
